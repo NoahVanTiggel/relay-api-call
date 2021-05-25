@@ -1,0 +1,19 @@
+apiVersion: integration/v1
+kind: Integration
+name: apicall
+channel: stable
+version: v1
+summary: Relay API call
+license: Apache-2.0
+homepage: https://github.com/NoahVanTiggel/relay-api-call
+source: https://github.com/NoahVanTiggel/relay-api-call
+
+description: |
+  Relay API call is a step to make simple API calls
+owner:
+  name: Noah Van Tiggel
+  email: noah.vantiggel@bryxx.eu
+  url: https://bryxx.eu
+
+tags:
+  - utilities
