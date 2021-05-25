@@ -36,10 +36,12 @@ do
     INDEX+=1
 done
 
-echo "Query: ${QUERYPARAMS}}"
+echo "Query: ${QUERYPARAMS}"
 
 FULL="curl -s -L -o response.txt -w "%{http_code}" -X ${METHOD} "${ARGS}" "${URL}${QUERYPARAMS}""
 CODE="$(eval $FULL)"
+
+echo "Full request: ${FULL}"
 
 echo "Code: ${CODE}"
 
