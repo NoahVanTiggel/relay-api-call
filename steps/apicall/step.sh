@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright (C) 2021 Noah Van Tiggel
+# Licensed under Apache 2.0
+
 JQ="${JQ:-jq}"
 NI="${NI:-ni}"
 
