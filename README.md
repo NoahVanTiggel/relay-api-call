@@ -43,3 +43,7 @@ Results in
   "z": "This is Z"
 }
 ```
+## License
+This project is licensed under Apache 2.0
+
+Copyright (C) 2021 Noah Van Tiggel
