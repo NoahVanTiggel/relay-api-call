@@ -21,7 +21,11 @@ do
 	ARGS+="-H ${header} "
 done
 
+echo "Headers: ${ARGS}"
+
 [ -n "${BODY}" ] && ARGS+="-d '${BODY}'"
+
+echo "Body: ${BODY}"
 
 INDEX=0
 for queryparam in "${QUERY[@]}"
@@ -32,8 +36,12 @@ do
     INDEX+=1
 done
 
+echo "Query: ${QUERYPARAMS}}"
+
 FULL="curl -s -L -o response.txt -w "%{http_code}" -X ${METHOD} "${ARGS}" "${URL}${QUERYPARAMS}""
 CODE="$(eval $FULL)"
+
+echo "Code: ${CODE}"
 
 ni output set -k code -v "$CODE"
 
@@ -68,5 +76,7 @@ fi
 # No errors, continue
 
 RESPONSE=$(cat response.txt)
+
+echo "Response: ${RESPONSE}"
 
 ni output set -k response -v "$RESPONSE"
