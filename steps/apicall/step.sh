@@ -13,7 +13,7 @@ IFS=$'\n'
 METHOD=$(ni get -p {.method})
 BODY=$(ni get | jq -rc 'try .body // empty')
 URL=$(ni get -p {.url})
-HEADERS=($(ni get | jq -r '.headers // empty | to_entries[] | "\(.key): \(.value)" | @sh'))
+HEADERS=($(ni get | jq -r '.headers // empty | to_entries[] | "\(.key): \(.value)"'))
 QUERY=($(ni get | jq -r '.query // empty | to_entries[] | "\(.key)=\(.value)"'))
 
 ARGS=""
@@ -52,8 +52,8 @@ ni output set -k code -v "$CODE"
 
 IFS=$OLDIFS
 
-EXPECTS=($(ni get | jq -r '.expects // empty | @sh'))
-FAILON=($(ni get | jq -r '.failon // empty | @sh'))
+EXPECTS=($(ni get | jq -r '.expects // empty'))
+FAILON=($(ni get | jq -r '.failon // empty'))
 
 # Check if the http code matches expects or failon
 # First check failon
