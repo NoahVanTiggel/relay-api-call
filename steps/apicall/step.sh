@@ -13,11 +13,24 @@ IFS=$'\n'
 METHOD=$(ni get -p {.method})
 BODY=$(ni get | jq -rc 'try .body // empty')
 URL=$(ni get -p {.url})
-HEADERS=($(ni get | jq -r '.headers // empty | to_entries[] | "\(.key): \(.value)"'))
+HEADERS=($(ni get | jq -r '.headers // empty | to_entries[] | "\(.key): \(.value)" | @sh'))
 QUERY=($(ni get | jq -r '.query // empty | to_entries[] | "\(.key)=\(.value)"'))
+FILE=$(ni get -p {.file})
 
 ARGS=""
 QUERYPARAMS=""
+
+if [ -n "${FILE}" ]; then
+    GIT=$(ni get -p {.git})
+    if [ -n "${GIT}" ]; then
+        ni git clone
+        NAME=$(ni get -p {.git.name})
+        PATH="/workspace/${NAME}/${FILE}"
+        BODY=$(cat $PATH | jq -rc 'try . //empty')
+    else    
+        BODY=$(curl -s $FILE | jq -rc 'try . //empty')
+    fi
+fi
 
 for header in "${HEADERS[@]}"
 do
@@ -52,8 +65,8 @@ ni output set -k code -v "$CODE"
 
 IFS=$OLDIFS
 
-EXPECTS=($(ni get | jq -r '.expects // empty'))
-FAILON=($(ni get | jq -r '.failon // empty'))
+EXPECTS=($(ni get | jq -r '.expects // empty | @sh'))
+FAILON=($(ni get | jq -r '.failon // empty | @sh'))
 
 # Check if the http code matches expects or failon
 # First check failon
