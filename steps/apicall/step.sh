@@ -8,19 +8,18 @@ NI="${NI:-ni}"
 
 # Change IFS so we can have spaces in values
 OLDIFS=$IFS
-IFS=$"\n"
+IFS=$'\n'
 
 METHOD=$(ni get -p {.method})
 BODY=$(ni get | jq -rc 'try .body // empty')
 URL=$(ni get -p {.url})
 HEADERS=($(ni get | jq -r '.headers // empty | to_entries[] | "\(.key): \(.value)" | @sh'))
 QUERY=($(ni get | jq -r '.query // empty | to_entries[] | "\(.key)=\(.value)"'))
-FILE=$(ni get -p {.file})
-FILEVARS=($(ni get | jq -r '.filevars // empty | to_entries[] | "\(.key)=\(.value)"'))
 
 ARGS=""
 QUERYPARAMS=""
 
+FILE=$(ni get -p {.file})
 if [ -n "${FILE}" ]; then
     GIT=$(ni get -p {.git})
     if [ -n "${GIT}" ]; then
@@ -31,9 +30,10 @@ if [ -n "${FILE}" ]; then
     else    
         BODY=$(curl -s $FILE | jq -rc 'try . //empty')
     fi
-
+    IFS=$' '
+    FILEVARS=($(ni get | jq -r '.filevars // empty | to_entries[] | "\(.key)=\(.value)"'))
     if [ -n "${FILEVARS}" ]; then
-        while IFS="=" read -r key value
+        while IFS='=' read -r key value
         do
             echo "Replacing var ${key} with ${value}"
             BODY=${BODY//$key/$value}
