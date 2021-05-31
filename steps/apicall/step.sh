@@ -8,7 +8,7 @@ NI="${NI:-ni}"
 
 # Change IFS so we can have spaces in values
 OLDIFS=$IFS
-IFS=$'\n'
+IFS=$"\n"
 
 METHOD=$(ni get -p {.method})
 BODY=$(ni get | jq -rc 'try .body // empty')
@@ -35,6 +35,7 @@ if [ -n "${FILE}" ]; then
     if [ -n "${FILEVARS}" ]; then
         while IFS="=" read -r key value
         do
+            echo "Replacing var ${key} with ${value}"
             BODY=${BODY//$key/$value}
         done < <(echo $FILEVARS)
         IFS=$'\n'
