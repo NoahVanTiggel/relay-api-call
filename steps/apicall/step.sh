@@ -26,8 +26,8 @@ if [ -n "${FILE}" ]; then
     if [ -n "${GIT}" ]; then
         ni git clone
         NAME=$(ni get -p {.git.name})
-        PATH="/workspace/${NAME}/${FILE}"
-        BODY=$(cat $PATH | jq -rc 'try . //empty')
+        FILEPATH="/workspace/${NAME}/${FILE}"
+        BODY=$(cat $FILEPATH | jq -rc 'try . //empty')
     else    
         BODY=$(curl -s $FILE | jq -rc 'try . //empty')
     fi
