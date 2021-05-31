@@ -16,6 +16,7 @@ URL=$(ni get -p {.url})
 HEADERS=($(ni get | jq -r '.headers // empty | to_entries[] | "\(.key): \(.value)" | @sh'))
 QUERY=($(ni get | jq -r '.query // empty | to_entries[] | "\(.key)=\(.value)"'))
 FILE=$(ni get -p {.file})
+FILEVARS=($(ni get | jq -r '.filevars // empty | to_entries[] | "\(.key)=\(.value)"'))
 
 ARGS=""
 QUERYPARAMS=""
@@ -30,6 +31,15 @@ if [ -n "${FILE}" ]; then
     else    
         BODY=$(curl -s $FILE | jq -rc 'try . //empty')
     fi
+
+    if [ -n "${FILEVARS}" ]; then
+        while IFS="=" read -r key value
+        do
+            BODY=${BODY//$key/$value}
+        done < <(echo $FILEVARS)
+        IFS=$'\n'
+    fi    
+
 fi
 
 for header in "${HEADERS[@]}"
